@@ -2033,8 +2033,11 @@ var HealthPlugin = class extends import_obsidian32.Plugin {
       version: 1,
       live: () => this.isLive(),
       today: () => this.todaySummary(),
+      medsToday: () => this.medsToday(),
       onChange: (cb) => this.store.onChange(cb),
       openView: () => void this.openView(),
+      openReport: () => this.openReport(),
+      openImport: () => new MigrationModal(this.app, this).open(),
       openLogDue: () => this.guard(() => new LogDueModal(this.app, this).open()),
       openAsNeeded: () => this.guard(() => new AsNeededModal(this.app, this).open()),
       openSymptoms: () => this.guard(() => new SymptomModal(this.app, this).open()),
@@ -2051,6 +2054,18 @@ var HealthPlugin = class extends import_obsidian32.Plugin {
     this.addCommand({ id: "add-medication", name: "Add a medication", callback: () => this.guard(() => new MedEditModal(this.app, this).open()) });
     this.addCommand({ id: "report", name: "Make a health report", callback: () => this.openReport() });
     this.addCommand({ id: "import-meridian", name: "Import medications from Meridian Dash", callback: () => new MigrationModal(this.app, this).open() });
+    this.registerObsidianProtocolHandler("health", (p) => {
+      var _a2, _b;
+      const actions = {
+        "log-due": () => this.api.openLogDue(),
+        "as-needed": () => this.api.openAsNeeded(),
+        symptoms: () => this.api.openSymptoms(),
+        vitals: () => this.api.openVitals(),
+        report: () => this.openReport(),
+        open: () => void this.openView()
+      };
+      ((_b = actions[(_a2 = p.action) != null ? _a2 : "open"]) != null ? _b : actions.open)();
+    });
     this.app.workspace.onLayoutReady(async () => {
       await this.store.load();
       this.legacyPresent = (await readLegacy(this.app)).kind !== "none";
@@ -2104,6 +2119,16 @@ var HealthPlugin = class extends import_obsidian32.Plugin {
       asNeeded: s.meds.filter((m) => m.active && m.kind === "as-needed").map((m) => ({ med: m.name, takenToday: asNeededStatus(m, s.doses, date, now).takenToday, limit: m.limits.maxPerDay })),
       bestStreak: Math.max(0, ...s.meds.filter((m) => m.active && m.kind === "scheduled").map((m) => streak(m, s.doses, date)))
     };
+  }
+  medsToday() {
+    const s = this.store.state;
+    const date = localDate();
+    const plan = dayPlan(s, date, localTime());
+    return s.meds.filter((m) => m.active && m.kind === "scheduled").map((m) => {
+      const mine = plan.filter((x) => x.med.id === m.id);
+      const taken = mine.filter((x) => x.state === "taken").length;
+      return { name: m.name, times: m.slots.map((x) => x.time).filter(Boolean), doneToday: mine.length > 0 && mine.every((x) => x.state !== "due"), takenToday: taken, slots: mine.length };
+    });
   }
   async openView() {
     var _a, _b;

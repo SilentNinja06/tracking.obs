@@ -19,9 +19,7 @@ iPhone/iPad. Everything stays in your vault as Markdown files that sync.
 - **Symptoms** with severity, and **vitals**: weight, blood pressure, heart rate,
   temperature, blood glucose.
 - **Reminders** on desktop when a dose is due. Medication names are hidden unless
-  you turn them on. On iPhone, use a Shortcuts automation that runs
-  `obsidian://advanced-uri?commandid=health%3Alog-due` (with Advanced URI) or
-  opens Obsidian at your chosen time.
+  you turn them on. On iPhone and iPad, use the Shortcuts recipes below.
 - **Provider report.** A note covering a date range, ready to export as PDF.
 - **Undo** on everything you log.
 
@@ -45,3 +43,52 @@ Health shows **Import from Meridian Dash** until you import:
 
 Meridian Dash's files are never changed. **Settings → Undo the import** switches
 back.
+
+## iPhone and iPad: Shortcuts recipes
+
+Obsidian plugins can't send notifications on iOS, but the Shortcuts app can
+open Health at the right screen. Every recipe uses one of these links:
+
+| Link | Opens |
+|---|---|
+| `obsidian://health?action=log-due` | the Log due sheet |
+| `obsidian://health?action=as-needed` | as-needed / over-the-counter logging |
+| `obsidian://health?action=symptoms` | Log symptoms |
+| `obsidian://health?action=vitals` | Log vitals |
+| `obsidian://health?action=report` | Make a health report |
+| `obsidian://health` | the Health view |
+
+If you have more than one vault, add `&vault=Your%20Vault%20Name` to the link.
+
+### 1. A reminder for each dose time
+
+Do this once for each time you take medication (e.g. 8:00 and 20:00).
+
+1. Open **Shortcuts → Automation → + → Time of Day**.
+2. Set the time (e.g. 8:00 AM), **Repeat: Daily**, and choose **Run Immediately**.
+   Turn **Notify When Run** on if you want a banner.
+3. Add the action **Open URLs** with `obsidian://health?action=log-due`.
+4. Tap **Done**.
+
+At that time Obsidian opens on Log due, with the doses that are due already
+ticked. Tap **Log all due**, or tick and untick.
+
+Want a gentle nudge instead of Obsidian opening by itself? Make a shortcut
+called **Log meds** with just the **Open URLs** action. Then in the automation
+use **Show Notification** ("Time for your medications"). Run **Log meds** from
+the notification, a widget, or the Action Button.
+
+### 2. One tap for over-the-counter meds
+
+1. **Shortcuts → + → Add Action → Open URLs** →
+   `obsidian://health?action=as-needed`.
+2. Name it **Took something** and add it to your Home Screen, a Lock Screen
+   widget, or the Action Button.
+
+Health shows how many you've had today and how long since the last one, and
+warns you if you're past your own limits.
+
+### 3. Symptoms and vitals in a hurry
+
+The same idea with `obsidian://health?action=symptoms` or `…?action=vitals`.
+A Lock Screen widget makes logging a headache a two-tap job.
