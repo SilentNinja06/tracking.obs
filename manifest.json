@@ -1,0 +1,9 @@
+{
+	"id": "health",
+	"name": "Health",
+	"version": "0.1.0",
+	"minAppVersion": "1.4.0",
+	"description": "Medications, doses, over-the-counter logging, symptoms and vitals, with reminders and a provider report. Everything stays in your vault.",
+	"author": "SilentNinja06",
+	"isDesktopOnly": false
+}
