@@ -13,9 +13,9 @@ var __export = (target, all) => {
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    for (let key2 of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key2) && key2 !== except)
+        __defProp(to, key2, { get: () => from[key2], enumerable: !(desc = __getOwnPropDesc(from, key2)) || desc.enumerable });
   }
   return to;
 };
@@ -27,7 +27,7 @@ __export(main_exports, {
   default: () => HealthPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian32 = require("obsidian");
+var import_obsidian35 = require("obsidian");
 
 // ../../packages/health-core/src/eventlog.ts
 var SMART = /[“”„‟″]/g;
@@ -452,9 +452,9 @@ function toHealthRecords(store, at) {
       const rec = { id: ids[i], t: "dose", at, med: m.id, date: e.date, time: e.time, amount: e.dose, status: "taken", src: "meridian" };
       const slot = inferSlot(slots, e.time);
       if (slot) rec.slot = slot;
-      const key = e.date.slice(0, 7);
-      if (!logs.has(key)) logs.set(key, []);
-      logs.get(key).push(rec);
+      const key2 = e.date.slice(0, 7);
+      if (!logs.has(key2)) logs.set(key2, []);
+      logs.get(key2).push(rec);
     });
   }
   return { meds, logs };
@@ -812,7 +812,7 @@ function localTime(d = /* @__PURE__ */ new Date()) {
 }
 
 // src/settings.ts
-var import_obsidian28 = require("obsidian");
+var import_obsidian31 = require("obsidian");
 
 // src/migration.ts
 var import_obsidian2 = require("obsidian");
@@ -1247,8 +1247,8 @@ function medToRecord(m, rev) {
 }
 
 // src/ui/modals.ts
-function sheet(m, cls, title) {
-  m.modalEl.addClass("hl-modal", cls);
+function sheet(m, cls2, title) {
+  m.modalEl.addClass("hl-modal", cls2);
   m.titleEl.setText(title);
   return m.contentEl;
 }
@@ -1272,20 +1272,20 @@ var LogDueModal = class extends import_obsidian27.Modal {
       c.createEl("p", { cls: "hl-muted", text: "Nothing's due right now. Everything scheduled today is logged." });
       return;
     }
-    const key = (s) => `${s.med.id}/${s.slot.id}`;
+    const key2 = (s) => `${s.med.id}/${s.slot.id}`;
     const nowMin = toMin(localTime());
     const isNow = (s) => s.overdue || !!s.slot.time && toMin(s.slot.time) - nowMin <= 60;
     const dueSoon = due.filter(isNow);
-    for (const s of due) this.picked.set(key(s), isNow(s));
+    for (const s of due) this.picked.set(key2(s), isNow(s));
     const list = c.createDiv({ cls: "hl-checklist" });
     const draw = () => {
       list.empty();
       for (const s of due) {
-        const row2 = list.createEl("label", { cls: "hl-check" + (this.picked.get(key(s)) ? " is-on" : "") });
+        const row2 = list.createEl("label", { cls: "hl-check" + (this.picked.get(key2(s)) ? " is-on" : "") });
         const box = row2.createEl("input", { type: "checkbox" });
-        box.checked = !!this.picked.get(key(s));
+        box.checked = !!this.picked.get(key2(s));
         box.onchange = () => {
-          this.picked.set(key(s), box.checked);
+          this.picked.set(key2(s), box.checked);
           draw();
         };
         row2.createSpan({ cls: "hl-check-time", text: s.slot.time || "any time" });
@@ -1305,14 +1305,14 @@ var LogDueModal = class extends import_obsidian27.Modal {
     }
     const sel = row.createEl("button", { cls: dueSoon.length ? "" : "mod-cta", text: "Log ticked" });
     sel.onclick = () => {
-      const on = due.filter((s) => this.picked.get(key(s)));
+      const on = due.filter((s) => this.picked.get(key2(s)));
       if (!on.length) return void new import_obsidian27.Notice("Tick at least one dose.");
       void this.log(on, []);
     };
     const skip = row.createEl("button", { text: "Log ticked, mark unticked due doses skipped" });
     skip.onclick = () => {
-      const on = due.filter((s) => this.picked.get(key(s)));
-      void this.log(on, due.filter((s) => !this.picked.get(key(s)) && isNow(s)));
+      const on = due.filter((s) => this.picked.get(key2(s)));
+      void this.log(on, due.filter((s) => !this.picked.get(key2(s)) && isNow(s)));
     };
   }
   async log(taken, skipped) {
@@ -1608,6 +1608,58 @@ function toMin(t) {
   return m ? Number(m[1]) * 60 + Number(m[2]) : 0;
 }
 
+// ../../packages/ui/dist/modal.js
+var import_obsidian28 = require("obsidian");
+
+// ../../packages/ui/dist/toast.js
+var import_obsidian29 = require("obsidian");
+
+// ../../packages/ui/dist/startup.js
+var import_obsidian30 = require("obsidian");
+var DASHBOARD_PLUGIN_IDS = ["meridian-dash", "daily-dash"];
+function dashboardInstalled(app) {
+  var _a;
+  const enabled = (_a = app.plugins) === null || _a === void 0 ? void 0 : _a.enabledPlugins;
+  return DASHBOARD_PLUGIN_IDS.some((id) => {
+    var _a2;
+    return (_a2 = enabled === null || enabled === void 0 ? void 0 : enabled.has) === null || _a2 === void 0 ? void 0 : _a2.call(enabled, id);
+  });
+}
+var key = (pluginId) => `${pluginId}:open-on-startup`;
+function opensOnStartup(app, pluginId) {
+  try {
+    return app.loadLocalStorage(key(pluginId)) === true;
+  } catch (_a) {
+    return false;
+  }
+}
+function startupSetting(container, app, pluginId, label) {
+  if (dashboardInstalled(app))
+    return;
+  new import_obsidian30.Setting(container).setName(`Open ${label} when Obsidian starts`).setDesc("On this device. Hidden while a dashboard (MERIDIAN Dash or Daily Dashboard) is installed, since that opens first.").addToggle((t) => t.setValue(opensOnStartup(app, pluginId)).onChange((v) => {
+    try {
+      app.saveLocalStorage(key(pluginId), v ? true : null);
+    } catch (_a) {
+    }
+  }));
+}
+async function openViewOnStartup(app, pluginId, viewType) {
+  var _a, _b;
+  if (dashboardInstalled(app) || !opensOnStartup(app, pluginId))
+    return;
+  const ws = app.workspace;
+  const existing = ws.getLeavesOfType(viewType)[0];
+  if (existing) {
+    ws.revealLeaf(existing);
+    return;
+  }
+  const active = ws.getMostRecentLeaf();
+  const empty = active && ((_b = (_a = active.view) === null || _a === void 0 ? void 0 : _a.getViewType) === null || _b === void 0 ? void 0 : _b.call(_a)) === "empty";
+  const leaf = empty ? active : ws.getLeaf("tab");
+  await leaf.setViewState({ type: viewType, active: true });
+  ws.revealLeaf(leaf);
+}
+
 // src/settings.ts
 var DEFAULT_SETTINGS = {
   folder: "Health",
@@ -1633,7 +1685,7 @@ function mergeSettings(stored) {
   }
   return out;
 }
-var HealthSettingTab = class extends import_obsidian28.PluginSettingTab {
+var HealthSettingTab = class extends import_obsidian31.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
@@ -1643,30 +1695,31 @@ var HealthSettingTab = class extends import_obsidian28.PluginSettingTab {
     const s = this.plugin.settings;
     const save = () => this.plugin.saveSettings();
     c.empty();
-    new import_obsidian28.Setting(c).setName("Reminders").setHeading();
-    new import_obsidian28.Setting(c).setName("Remind me when a dose is due").setDesc("Desktop only. On iPhone, use a Shortcuts automation instead.").addToggle((t) => t.setValue(s.reminders).onChange(async (v) => (s.reminders = v, await save())));
-    new import_obsidian28.Setting(c).setName("Show medication names in reminders").setDesc("Off: reminders just say it's time for your medications (safer on a lock screen).").addToggle((t) => t.setValue(s.namesInReminders).onChange(async (v) => (s.namesInReminders = v, await save())));
-    new import_obsidian28.Setting(c).setName("Vitals").setHeading();
+    startupSetting(c, this.app, "health", "Health");
+    new import_obsidian31.Setting(c).setName("Reminders").setHeading();
+    new import_obsidian31.Setting(c).setName("Remind me when a dose is due").setDesc("Desktop only. On iPhone, use a Shortcuts automation instead.").addToggle((t) => t.setValue(s.reminders).onChange(async (v) => (s.reminders = v, await save())));
+    new import_obsidian31.Setting(c).setName("Show medication names in reminders").setDesc("Off: reminders just say it's time for your medications (safer on a lock screen).").addToggle((t) => t.setValue(s.namesInReminders).onChange(async (v) => (s.namesInReminders = v, await save())));
+    new import_obsidian31.Setting(c).setName("Vitals").setHeading();
     for (const v of VITALS) {
-      new import_obsidian28.Setting(c).setName(v.label).addToggle(
+      new import_obsidian31.Setting(c).setName(v.label).addToggle(
         (t) => t.setValue(s.vitals.includes(v.kind)).onChange(async (on) => {
           s.vitals = on ? [.../* @__PURE__ */ new Set([...s.vitals, v.kind])] : s.vitals.filter((x) => x !== v.kind);
           await save();
         })
       );
     }
-    new import_obsidian28.Setting(c).setName("Weight unit").addDropdown((d) => d.addOption("kg", "kg").addOption("lb", "lb").setValue(s.weightUnit).onChange(async (v) => (s.weightUnit = v, await save())));
-    new import_obsidian28.Setting(c).setName("Temperature unit").addDropdown((d) => d.addOption("\xB0C", "\xB0C").addOption("\xB0F", "\xB0F").setValue(s.tempUnit).onChange(async (v) => (s.tempUnit = v, await save())));
-    new import_obsidian28.Setting(c).setName("Blood glucose unit").addDropdown((d) => d.addOption("mg/dL", "mg/dL").addOption("mmol/L", "mmol/L").setValue(s.glucoseUnit).onChange(async (v) => (s.glucoseUnit = v, await save())));
-    new import_obsidian28.Setting(c).setName("Symptoms").setHeading();
-    new import_obsidian28.Setting(c).setName("Your own symptoms").setDesc("Comma-separated. Added to the symptom list.").addTextArea(
+    new import_obsidian31.Setting(c).setName("Weight unit").addDropdown((d) => d.addOption("kg", "kg").addOption("lb", "lb").setValue(s.weightUnit).onChange(async (v) => (s.weightUnit = v, await save())));
+    new import_obsidian31.Setting(c).setName("Temperature unit").addDropdown((d) => d.addOption("\xB0C", "\xB0C").addOption("\xB0F", "\xB0F").setValue(s.tempUnit).onChange(async (v) => (s.tempUnit = v, await save())));
+    new import_obsidian31.Setting(c).setName("Blood glucose unit").addDropdown((d) => d.addOption("mg/dL", "mg/dL").addOption("mmol/L", "mmol/L").setValue(s.glucoseUnit).onChange(async (v) => (s.glucoseUnit = v, await save())));
+    new import_obsidian31.Setting(c).setName("Symptoms").setHeading();
+    new import_obsidian31.Setting(c).setName("Your own symptoms").setDesc("Comma-separated. Added to the symptom list.").addTextArea(
       (t) => t.setValue(s.extraSymptoms.join(", ")).onChange(async (v) => {
         s.extraSymptoms = v.split(",").map((x) => x.trim()).filter(Boolean);
         await save();
       })
     );
-    new import_obsidian28.Setting(c).setName("Storage").setHeading();
-    new import_obsidian28.Setting(c).setName("Health folder").setDesc("Where your medications and log live, as Markdown files that sync. Changing this doesn't move existing files.").addText(
+    new import_obsidian31.Setting(c).setName("Storage").setHeading();
+    new import_obsidian31.Setting(c).setName("Health folder").setDesc("Where your medications and log live, as Markdown files that sync. Changing this doesn't move existing files.").addText(
       (t) => t.setValue(s.folder).onChange(async (v) => {
         const f = v.trim().replace(/^\/+|\/+$/g, "");
         if (f && !f.startsWith(".")) {
@@ -1677,7 +1730,7 @@ var HealthSettingTab = class extends import_obsidian28.PluginSettingTab {
     );
     const m = this.plugin.store.state.migration;
     if ((m == null ? void 0 : m.verified) && !m.rolledBackAt) {
-      new import_obsidian28.Setting(c).setName("Undo the import from Meridian Dash").setDesc("Health stops being in charge and Meridian Dash's medication data (which was never changed) is used again. Health's copy stays in its folder.").addButton(
+      new import_obsidian31.Setting(c).setName("Undo the import from Meridian Dash").setDesc("Health stops being in charge and Meridian Dash's medication data (which was never changed) is used again. Health's copy stays in its folder.").addButton(
         (b) => b.setButtonText("Undo import").setWarning().onClick(
           () => new ConfirmModal(this.app, "Undo the import?", ["Health will stop showing and logging medications until you import again. Nothing is deleted."], "Undo import", async () => {
             await rollbackMigration(this.plugin.store);
@@ -1690,11 +1743,11 @@ var HealthSettingTab = class extends import_obsidian28.PluginSettingTab {
 };
 
 // src/ui/view.ts
-var import_obsidian30 = require("obsidian");
+var import_obsidian33 = require("obsidian");
 
 // src/ui/migrationModal.ts
-var import_obsidian29 = require("obsidian");
-var MigrationModal = class extends import_obsidian29.Modal {
+var import_obsidian32 = require("obsidian");
+var MigrationModal = class extends import_obsidian32.Modal {
   constructor(app, plugin, onDone = () => {
   }) {
     super(app);
@@ -1824,7 +1877,7 @@ function vitalLabel(kind) {
 
 // src/ui/view.ts
 var VIEW_HEALTH = "health-view";
-var HealthView = class extends import_obsidian30.ItemView {
+var HealthView = class extends import_obsidian33.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.plugin = plugin;
@@ -1875,7 +1928,7 @@ var HealthView = class extends import_obsidian30.ItemView {
       row.createSpan({ cls: "hl-tag", text: x.state === "due" ? x.overdue ? "due" : "later" : x.state === "taken" ? `\u2713 ${(_b = (_a = x.dose) == null ? void 0 : _a.time) != null ? _b : ""}` : "skipped" });
       if (x.dose) {
         const u = row.createEl("button", { cls: "clickable-icon hl-icon", attr: { "aria-label": "Undo" } });
-        (0, import_obsidian30.setIcon)(u, "undo-2");
+        (0, import_obsidian33.setIcon)(u, "undo-2");
         u.onclick = () => void undo(p, x.dose);
       }
     }
@@ -1905,7 +1958,7 @@ var HealthView = class extends import_obsidian30.ItemView {
       row.createSpan({ cls: "hl-row-time", text: e.time });
       row.createSpan({ cls: "hl-row-name", text: e.text });
       const u = row.createEl("button", { cls: "clickable-icon hl-icon", attr: { "aria-label": "Undo" } });
-      (0, import_obsidian30.setIcon)(u, "undo-2");
+      (0, import_obsidian33.setIcon)(u, "undo-2");
       u.onclick = () => void undo(p, { id: e.id, date: today });
     }
     const meds = section(c, "Medications", "");
@@ -1925,9 +1978,9 @@ var HealthView = class extends import_obsidian30.ItemView {
       if (!m.active) bits.push("archived");
       info.createDiv({ cls: "hl-muted", text: bits.join(" \xB7 ") });
       const more = row.createEl("button", { cls: "clickable-icon hl-icon", attr: { "aria-label": "Options" } });
-      (0, import_obsidian30.setIcon)(more, "more-vertical");
+      (0, import_obsidian33.setIcon)(more, "more-vertical");
       more.onclick = (ev) => {
-        const menu = new import_obsidian30.Menu();
+        const menu = new import_obsidian33.Menu();
         menu.addItem((i) => i.setTitle("Edit").setIcon("pencil").onClick(() => new MedEditModal(this.app, p, m, this.refresh).open()));
         menu.addItem((i) => i.setTitle("Change dose").setIcon("arrow-up-down").onClick(() => new DoseChangeModal(this.app, p, m, this.refresh).open()));
         menu.showAtMouseEvent(ev);
@@ -1974,18 +2027,18 @@ function todaysEntries(s, today) {
 }
 
 // src/reminders.ts
-var import_obsidian31 = require("obsidian");
+var import_obsidian34 = require("obsidian");
 function startReminders(plugin) {
-  if (!import_obsidian31.Platform.isDesktopApp) return;
+  if (!import_obsidian34.Platform.isDesktopApp) return;
   const tick = () => {
     var _a;
     if (!plugin.settings.reminders || !plugin.isLive() || typeof Notification === "undefined") return;
     const today = localDate();
     const now = localTime();
-    const key = `health-reminded-${today}`;
+    const key2 = `health-reminded-${today}`;
     let done = [];
     try {
-      done = JSON.parse((_a = window.localStorage.getItem(key)) != null ? _a : "[]");
+      done = JSON.parse((_a = window.localStorage.getItem(key2)) != null ? _a : "[]");
     } catch (e) {
       done = [];
     }
@@ -1999,7 +2052,7 @@ function startReminders(plugin) {
       return;
     }
     try {
-      window.localStorage.setItem(key, JSON.stringify([...done, ...due.map((s) => `${s.med.id}/${s.slot.id}`)]));
+      window.localStorage.setItem(key2, JSON.stringify([...done, ...due.map((s) => `${s.med.id}/${s.slot.id}`)]));
     } catch (e) {
     }
   };
@@ -2012,7 +2065,7 @@ function minutes(t) {
 }
 
 // src/main.ts
-var HealthPlugin = class extends import_obsidian32.Plugin {
+var HealthPlugin = class extends import_obsidian35.Plugin {
   constructor() {
     super(...arguments);
     this.settings = DEFAULT_SETTINGS;
@@ -2044,6 +2097,7 @@ var HealthPlugin = class extends import_obsidian32.Plugin {
       openVitals: () => this.guard(() => new VitalModal(this.app, this).open())
     };
     this.registerView(VIEW_HEALTH, (leaf) => new HealthView(leaf, this));
+    this.app.workspace.onLayoutReady(() => void openViewOnStartup(this.app, "health", VIEW_HEALTH));
     this.addSettingTab(new HealthSettingTab(this.app, this));
     this.addRibbonIcon("heart-pulse", "Health", () => void this.openView());
     this.addCommand({ id: "open", name: "Open Health", callback: () => void this.openView() });
@@ -2101,7 +2155,7 @@ var HealthPlugin = class extends import_obsidian32.Plugin {
   guard(fn) {
     if (this.isLive()) fn();
     else {
-      new import_obsidian32.Notice("Import your medications from Meridian Dash first.");
+      new import_obsidian35.Notice("Import your medications from Meridian Dash first.");
       new MigrationModal(this.app, this).open();
     }
   }
@@ -2135,7 +2189,7 @@ var HealthPlugin = class extends import_obsidian32.Plugin {
     const ws = this.app.workspace;
     let leaf = (_a = ws.getLeavesOfType(VIEW_HEALTH)[0]) != null ? _a : null;
     if (!leaf) {
-      leaf = import_obsidian32.Platform.isMobile ? ws.getLeaf(true) : (_b = ws.getRightLeaf(false)) != null ? _b : ws.getLeaf(true);
+      leaf = import_obsidian35.Platform.isMobile ? ws.getLeaf(true) : (_b = ws.getRightLeaf(false)) != null ? _b : ws.getLeaf(true);
       await leaf.setViewState({ type: VIEW_HEALTH, active: true });
     }
     ws.revealLeaf(leaf);
@@ -2151,7 +2205,7 @@ var HealthPlugin = class extends import_obsidian32.Plugin {
     await this.persist();
   }
 };
-var ReportModal = class extends import_obsidian32.Modal {
+var ReportModal = class extends import_obsidian35.Modal {
   constructor(plugin) {
     super(plugin.app);
     this.plugin = plugin;
@@ -2166,25 +2220,25 @@ var ReportModal = class extends import_obsidian32.Modal {
     let start = localDate(d);
     let to = end;
     c.createEl("p", { cls: "hl-muted", text: "Makes a note with your medications, dose changes, adherence, as-needed use, symptoms and vitals. Use Obsidian's Export to PDF to share it." });
-    new import_obsidian32.Setting(c).setName("From").addText((t) => {
+    new import_obsidian35.Setting(c).setName("From").addText((t) => {
       t.inputEl.type = "date";
       t.setValue(start).onChange((v) => start = v);
     });
-    new import_obsidian32.Setting(c).setName("To").addText((t) => {
+    new import_obsidian35.Setting(c).setName("To").addText((t) => {
       t.inputEl.type = "date";
       t.setValue(to).onChange((v) => to = v);
     });
     const b = c.createDiv({ cls: "hl-actions" }).createEl("button", { cls: "mod-cta", text: "Make report" });
     b.onclick = async () => {
-      if (!start || !to || start > to) return void new import_obsidian32.Notice("Pick a start date before the end date.");
+      if (!start || !to || start > to) return void new import_obsidian35.Notice("Pick a start date before the end date.");
       const md = buildReport(this.plugin.store.state, start, to, localDate());
-      const dir = (0, import_obsidian32.normalizePath)(`${this.plugin.store.root}/Reports`);
+      const dir = (0, import_obsidian35.normalizePath)(`${this.plugin.store.root}/Reports`);
       await this.plugin.store.ensureFolder(`${dir}/x`);
-      let path = (0, import_obsidian32.normalizePath)(`${dir}/Health report ${start} to ${to}.md`);
-      for (let n = 2; this.app.vault.getAbstractFileByPath(path); n++) path = (0, import_obsidian32.normalizePath)(`${dir}/Health report ${start} to ${to} (${n}).md`);
+      let path = (0, import_obsidian35.normalizePath)(`${dir}/Health report ${start} to ${to}.md`);
+      for (let n = 2; this.app.vault.getAbstractFileByPath(path); n++) path = (0, import_obsidian35.normalizePath)(`${dir}/Health report ${start} to ${to} (${n}).md`);
       const file = await this.app.vault.create(path, md);
       this.close();
-      if (file instanceof import_obsidian32.TFile) await this.app.workspace.getLeaf(true).openFile(file);
+      if (file instanceof import_obsidian35.TFile) await this.app.workspace.getLeaf(true).openFile(file);
     };
   }
   onClose() {
